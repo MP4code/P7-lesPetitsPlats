@@ -23,17 +23,49 @@ export class FiltersModel {
             >
 
             <ul class="filter-list">
-                ${[...this.values].map(value => `
+                 ${[...this.values]
+                 .sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }))
+                 .map(value => `
                     <li class="filter-item" data-value="${value}">
-                        ${value}
+                     ${value}
                     </li>
                 `).join('')}
             </ul>
         </div>
     `;
 
+const input = container.querySelector('.filter-search');
+const items = container.querySelectorAll('.filter-item');
+
+input.addEventListener('input', (e) => {
+  const search = e.target.value.toLowerCase();
+
+  items.forEach(item => {
+    const value = item.textContent.toLowerCase();
+    item.style.display = value.includes(search) ? 'block' : 'none';
+  });
+});
+
+
+items.forEach(item => {
+  item.addEventListener('click', () => {
+    const value = item.dataset.value.toLowerCase();
+
+    container.dispatchEvent(
+      new CustomEvent('filter:selected', {
+        detail: {
+          type: this.id,   // ingredients | appliances | ustensils
+          value
+        },
+        bubbles: true
+      })
+    );
+  });
+});
+
     return container;
 }
 
 
 }
+
