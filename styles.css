@@ -187,19 +187,35 @@ h1{
     cursor: pointer;
 }
 
-.filter-item:hover {
+/*.filter-item:hover {
     background-color: rgba(255, 255, 255, 0.2);
-}
+}*/
 
 /* FILTRE SÉLECTIONNÉ */
+.filterSelectedActive{
+    /*display: block;*/
+    padding: 10px;
+    background-color: var(--primary-color);
+    width: 80%;
+}
+.filterSelectedInactive{
+    display: none;
+}
+
+/* Bouton de suppression du filtre sélectionné*/
 .filterSelected{
     display: none;
 }
-.filterSelectedActive{
+.filterSelectedRemove{
     display: block;
-    margin: 20px;
-    padding: 10px;
-    background-color: var(--primary-color);
+}
+
+/*Bouton de suppression */
+.remove-filter {
+    background: var(--primary-color);
     border-radius: 10px;
-    width: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    padding: 17px 18px;
 }
