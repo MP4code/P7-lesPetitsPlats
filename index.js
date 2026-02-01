@@ -131,6 +131,7 @@ document.addEventListener("click", (e) => {
 });
 
 // AFFICHAGE DU BOUTON FILTRE SÉLECTIONNÉ
+// tag de filtre sélectionné
 function displayActiveFilterButtons() {
   filterSelectedDiv.innerHTML = "";
 
