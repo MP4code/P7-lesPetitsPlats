@@ -195,7 +195,6 @@ h1{
 .filterSelectedActive{
     /*display: block;*/
     padding: 10px;
-    background-color: var(--primary-color);
     width: 80%;
 }
 .filterSelectedInactive{
@@ -218,4 +217,29 @@ h1{
     cursor: pointer;
     margin: 10px;
     padding: 17px 18px;
+}
+
+
+/*Bouton de suppression ( barre recherche ) */
+.clear-btn{
+    display: none;
+}
+
+.clear-btnActive{
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 8%;
+    background: transparent;
+    border: none;
+    font-size: 30px;
+}
+
+/*Message de résultat de recherche*/
+.no-results-message{
+    font-size: 20px;
+    margin: 0 0 5% 0;
+    font-weight: bold;
+    text-align: center;
 }

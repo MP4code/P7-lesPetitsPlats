@@ -1,3 +1,4 @@
+// modelFilters.js affiche les filtres disponibles en fonction des recettes affichées et gère la sélection des filtres.
 export class FiltersModel {
   constructor(values, id, label) {
     this.values = values;
@@ -37,12 +38,12 @@ export class FiltersModel {
                    .join("")}
             </ul>
         </div>
-         
     `;
 
     const input = container.querySelector(".filter-search");
     const items = container.querySelectorAll(".filter-item");
 
+    /* RECHERCHE DANS LE FILTRE */
     input.addEventListener("input", (e) => {
       const search = e.target.value.toLowerCase();
 
@@ -52,18 +53,10 @@ export class FiltersModel {
       });
     });
 
+    /* SÉLECTION D’UN FILTRE */
     items.forEach((item) => {
       item.addEventListener("click", () => {
         const value = item.dataset.value.toLowerCase();
-        item.setAttribute("selected", "true");
-        if (item.getAttribute("selected") === "true") {
-          item.classList.toggle("filterSelectedActive");
-        }
-        /*item.classList.toggle("filterSelectedActive");
-        const btnRemove = document.querySelector(".remove-filter");
-        if (btnRemove && btnRemove.getAttribute("data-value") === value) {
-          btnRemove.classList.add("filterSelected");
-        }*/
 
         container.dispatchEvent(
           new CustomEvent("filter:selected", {

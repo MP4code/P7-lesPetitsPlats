@@ -1,18 +1,20 @@
+//search.js gère la recherche globale des recettes, l'affichage des recettes filtrées et le compteur de recettes affichées.
+// Il communique également avec les autres modules pour mettre à jour les filtres en fonction des résultats de la recherche.
+
 import recipes from "../data/recipes.js";
 import { RecipesModel } from "../Template/modelRecipes.js";
 
-/* Récuperer les éléments du DOM */
-// Barre de recherche principale, les recettes et le total des recettes
-// filtres sélectionnés(tag)
-
+/* SÉLECTION DES ÉLÉMENTS */
 const searchBar = document.getElementById("search-bar");
 const recipesContainer = document.querySelector(".recipes-container");
 const totalRecipesDiv = document.querySelector(".totalRecipes");
-const filterSelectedDiv = document.querySelector(".filterSelected");
+const noResultsMessage = document.querySelector(".no-results-message");
+const clearBtn = document.querySelector(".clear-btn");
 
-/* AFFICHAGE RECETTES */
+let searchText = "";
 
-function displayRecipes(recipesToDisplay) {
+// AFFICHAGE RECETTES
+export function displayRecipes(recipesToDisplay) {
   recipesContainer.innerHTML = "";
 
   recipesToDisplay.forEach((recipeData) => {
@@ -21,54 +23,86 @@ function displayRecipes(recipesToDisplay) {
   });
 }
 
-/* TOTAL RECETTES */
-
-function updateTotal(count) {
+// TOTAL RECETTES
+export function updateTotal(count) {
   totalRecipesDiv.textContent = `${count} recettes`;
 }
 
-/*AFFICHAGE TAG : FILTRES SÉLECTIONNÉS */
+// fonction qui affiche un état de la recherche(ex: "aucune recette ne correspond à "xxx" ou "x recettes correspondent à "xxx"")
+// il faut l'appeler uniquement après la recherche principale pour éviter d'afficher un message d'aucun résultat alors que les filtres n'ont pas encore été appliqués
+export function displaySearchState(count, searchText) {
+  if (count === 0 && searchText.length >= 3) {
+    noResultsMessage.textContent = `Aucune recette ne correspond à "${searchText}",  vous pouvez chercher «
+    tarte aux pommes », « poisson », etc.`;
+    console.log("Aucune recette ne correspond à", searchText);
+    noResultsMessage.style.display = "block";
+  } else {
+    noResultsMessage.style.display = "none";
+    noResultsMessage.innerHTML = `${count} recette(s) correspondent à "${searchText}"`;
+  }
+}
 
-/* RECHERCHE PRINCIPALE */
-// ValueInupt : valeur entrée dans la barre de recherche
-// NameMatch : correspondance dans le nom de la recette
-// DescriptionMatch : correspondance dans la description de la recette
-// IngredientsMatch : correspondance dans les ingrédients de la recette
-// toLowerCase() pour normaliser les données (majuscules/minuscules)
-function searchRecipes(valueInput) {
-  const search = valueInput.toLowerCase();
+// RECHERCHE PRINCIPALE
+// La recherche est déclenchée à chaque saisie dans la barre de recherche.
+// Elle filtre les recettes en fonction du texte saisi, puis met à jour l'affichage des recettes et le compteur.
+// ajout .split(w) pour éviter les problèmes de recherche sur les mots composés (ex: "tarte aux pommes" ne correspond pas à "pommes" sans split)
 
-  const filteredRecipes = recipes.filter((recipe) => {
-    const nameMatch = recipe.name.toLowerCase().includes(search);
+export function searchRecipes(valueInput) {
+  searchText = valueInput.toLowerCase().trim();
 
-    const descriptionMatch = recipe.description.toLowerCase().includes(search);
+  let filteredRecipes;
 
-    const ingredientsMatch = recipe.ingredients.some((ing) =>
-      ing.ingredient.toLowerCase().includes(search)
-    );
+  if (searchText.length >= 3) {
+    filteredRecipes = recipes.filter((recipe) => {
+      const nameWords = recipe.name.toLowerCase();
+      const descWords = recipe.description.toLowerCase();
+      const ingredientWords = recipe.ingredients
+        .map((i) => i.ingredient.toLowerCase())
+        .flat();
 
-    return nameMatch || descriptionMatch || ingredientsMatch;
-  });
+      return (
+        nameWords.includes(searchText) ||
+        descWords.includes(searchText) ||
+        ingredientWords.includes(searchText)
+      );
+    });
+  } else {
+    // Moins de 3 caractères = on renvoie toutes les recettes
+    filteredRecipes = [...recipes];
+  }
 
   displayRecipes(filteredRecipes);
   updateTotal(filteredRecipes.length);
+  displaySearchState(filteredRecipes.length, searchText);
+
+  // Envoie les recettes filtrées pour mettre à jour les filtres
+  // vers index.js qui va appliquer les filtres actifs et n'afficher que les recettes qui correspondent à tous les critères
+  document.dispatchEvent(
+    new CustomEvent("recipes:filtered", { detail: filteredRecipes })
+  );
 }
 
-/* ÉCOUTEUR BARRE DE RECHERCHE */
-// Déclenche la recherche lorsque l'utilisateur tape au moins 3 caractères
+// GESTION BOUTON CLEAR
+export function clearSearch(valueInput) {
+  if (valueInput && valueInput.length >= 3) {
+    clearBtn.classList.add("clear-btnActive");
+  } else {
+    clearBtn.classList.remove("clear-btnActive");
+  }
 
+  clearBtn.addEventListener("click", () => {
+    searchBar.value = "";
+    clearBtn.classList.remove("clear-btnActive");
+    searchRecipes("");
+  });
+}
+
+// ÉCOUTEUR BARRE DE RECHERCHE
 searchBar.addEventListener("input", (e) => {
   const valueInput = e.target.value.trim();
-
-  if (valueInput.length >= 3) {
-    searchRecipes(valueInput);
-  } else {
-    displayRecipes(recipes);
-    updateTotal(recipes.length);
-  }
+  searchRecipes(valueInput);
+  clearSearch(valueInput);
 });
 
-/* INITIALISATION */
-
-displayRecipes(recipes);
-updateTotal(recipes.length);
+// INITIALISATION
+searchRecipes("");
