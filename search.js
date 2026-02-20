@@ -45,27 +45,36 @@ export function displaySearchState(count, searchText) {
 // RECHERCHE PRINCIPALE
 // La recherche est déclenchée à chaque saisie dans la barre de recherche.
 // Elle filtre les recettes en fonction du texte saisi, puis met à jour l'affichage des recettes et le compteur.
-// ajout .split(w) pour éviter les problèmes de recherche sur les mots composés (ex: "tarte aux pommes" ne correspond pas à "pommes" sans split)
 
 export function searchRecipes(valueInput) {
   searchText = valueInput.toLowerCase().trim();
 
   let filteredRecipes;
-
   if (searchText.length >= 3) {
-    filteredRecipes = recipes.filter((recipe) => {
+    filteredRecipes = [];
+
+    // Parcours de toutes les recettes pour trouver celles qui correspondent au texte de recherche
+    // recipes[i] = une recette
+    for (let i = 0; i < recipes.length; i++) {
+      const recipe = recipes[i];
+
       const nameWords = recipe.name.toLowerCase();
       const descWords = recipe.description.toLowerCase();
-      const ingredientWords = recipe.ingredients
-        .map((i) => i.ingredient.toLowerCase())
-        .flat();
 
-      return (
+      // On crée un tableau avec tous les ingrédients de la recette pour pouvoir faire une recherche dessus
+      const ingredientWords = [];
+      for (let j = 0; j < recipe.ingredients.length; j++) {
+        ingredientWords.push(recipe.ingredients[j].ingredient.toLowerCase());
+      }
+
+      if (
         nameWords.includes(searchText) ||
         descWords.includes(searchText) ||
         ingredientWords.includes(searchText)
-      );
-    });
+      ) {
+        filteredRecipes.push(recipe);
+      }
+    }
   } else {
     // Moins de 3 caractères = on renvoie toutes les recettes
     filteredRecipes = [...recipes];
