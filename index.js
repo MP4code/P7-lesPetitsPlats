@@ -79,6 +79,11 @@ function displayActiveFilterButtons() {
       button.classList.add("remove-filter");
       button.textContent = value;
       button.setAttribute("data-value", value);
+      const closeBtn = document.createElement("div");
+      closeBtn.classList.add("close-btn");
+      closeBtn.textContent = "×";
+
+      button.appendChild(closeBtn);
 
       button.addEventListener("click", () => {
         activeFilters[type] = activeFilters[type].filter((v) => v !== value);

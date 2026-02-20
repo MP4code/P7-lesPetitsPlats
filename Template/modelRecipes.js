@@ -34,11 +34,11 @@ export class RecipesModel {
 
                <div class="ingredients-list">
                     <p>INGRÉDIENTS:</p>
-                <ul>
+                <ul class="ingredients-list-items">
         ${this.ingredients
           .map(
             (ing) => `
-            <li>
+            <li class="ingredients-item-content">
                 <span class="ingredient-name">${ing.ingredient}</span>
                 <span class="ingredient-quantity">
                     ${ing.quantity ? ing.quantity : ""}

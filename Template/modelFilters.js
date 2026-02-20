@@ -13,6 +13,7 @@ export class FiltersModel {
     container.innerHTML = `
         <button class="filter-button" aria-expanded="false">
             ${this.label}
+          <img src="assets/arrow-bottom.png" alt="Flèche vers le bas" class="arrow-icon">
         </button>
 
         <div class="filter-dropdown">
