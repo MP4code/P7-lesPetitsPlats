@@ -28,8 +28,11 @@ export function updateTotal(count) {
   totalRecipesDiv.textContent = `${count} recettes`;
 }
 
-// fonction qui affiche un état de la recherche(ex: "aucune recette ne correspond à "xxx" ou "x recettes correspondent à "xxx"")
-// il faut l'appeler uniquement après la recherche principale pour éviter d'afficher un message d'aucun résultat alors que les filtres n'ont pas encore été appliqués
+/**fonction qui affiche un état de la recherche(ex: "aucune recette ne correspond à "xxx" ou "x recettes correspondent à "xxx"")
+ * il faut l'appeler uniquement après la recherche principale pour éviter d'afficher un message d'aucun résultat alors que les filtres n'ont pas encore été appliqués
+ * @param {*} count
+ * @param {*} searchText
+ */
 export function displaySearchState(count, searchText) {
   if (count === 0 && searchText.length >= 3) {
     noResultsMessage.textContent = `Aucune recette ne correspond à "${searchText}",  vous pouvez chercher «
@@ -42,10 +45,11 @@ export function displaySearchState(count, searchText) {
   }
 }
 
-// RECHERCHE PRINCIPALE
-// La recherche est déclenchée à chaque saisie dans la barre de recherche.
-// Elle filtre les recettes en fonction du texte saisi, puis met à jour l'affichage des recettes et le compteur.
-
+/**RECHERCHE PRINCIPALE
+ * La recherche est déclenchée à chaque saisie dans la barre de recherche.
+ * Elle filtre les recettes en fonction du texte saisi, puis met à jour l'affichage des recettes et le compteur.
+ * @param {*} valueInput
+ */
 export function searchRecipes(valueInput) {
   searchText = valueInput.toLowerCase().trim();
 
@@ -87,7 +91,7 @@ export function searchRecipes(valueInput) {
   // Envoie les recettes filtrées pour mettre à jour les filtres
   // vers index.js qui va appliquer les filtres actifs et n'afficher que les recettes qui correspondent à tous les critères
   document.dispatchEvent(
-    new CustomEvent("recipes:filtered", { detail: filteredRecipes })
+    new CustomEvent("recipes:filtered", { detail: filteredRecipes }),
   );
 }
 

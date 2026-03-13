@@ -23,7 +23,7 @@ function displayFilters(recipesToDisplay) {
 
   recipesToDisplay.forEach((recipe) => {
     recipe.ingredients.forEach((ing) =>
-      ingredients.add(ing.ingredient.toLowerCase())
+      ingredients.add(ing.ingredient.toLowerCase()),
     );
     appliances.add(recipe.appliance.toLowerCase());
     recipe.ustensils.forEach((ust) => ustensils.add(ust.toLowerCase()));
@@ -33,13 +33,13 @@ function displayFilters(recipesToDisplay) {
   container.innerHTML = "";
 
   container.appendChild(
-    new FiltersModel(ingredients, "ingredients", "Ingrédients").createHtml()
+    new FiltersModel(ingredients, "ingredients", "Ingrédients").createHtml(),
   );
   container.appendChild(
-    new FiltersModel(appliances, "appliances", "Appareils").createHtml()
+    new FiltersModel(appliances, "appliances", "Appareils").createHtml(),
   );
   container.appendChild(
-    new FiltersModel(ustensils, "ustensils", "Ustensiles").createHtml()
+    new FiltersModel(ustensils, "ustensils", "Ustensiles").createHtml(),
   );
 }
 
@@ -49,15 +49,15 @@ function displayFilters(recipesToDisplay) {
 function applyFilters(filteredFromSearch) {
   const filteredRecipes = filteredFromSearch.filter((recipe) => {
     const ingredientsOk = activeFilters.ingredients.every((f) =>
-      recipe.ingredients.map((i) => i.ingredient.toLowerCase()).includes(f)
+      recipe.ingredients.map((i) => i.ingredient.toLowerCase()).includes(f),
     );
 
     const appliancesOk = activeFilters.appliances.every(
-      (f) => recipe.appliance.toLowerCase() === f
+      (f) => recipe.appliance.toLowerCase() === f,
     );
 
     const ustensilsOk = activeFilters.ustensils.every((f) =>
-      recipe.ustensils.map((u) => u.toLowerCase()).includes(f)
+      recipe.ustensils.map((u) => u.toLowerCase()).includes(f),
     );
 
     return ingredientsOk && appliancesOk && ustensilsOk;
@@ -70,6 +70,9 @@ function applyFilters(filteredFromSearch) {
 }
 
 // GESTION DES TAGS ACTIFS
+/**
+ *
+ */
 function displayActiveFilterButtons() {
   filterSelectedDiv.innerHTML = "";
 
@@ -96,7 +99,7 @@ function displayActiveFilterButtons() {
 
   filterSelectedDiv.classList.toggle(
     "filterSelectedRemove",
-    filterSelectedDiv.children.length > 0
+    filterSelectedDiv.children.length > 0,
   );
 }
 
@@ -136,7 +139,7 @@ document.addEventListener("click", (e) => {
   currentFilter.classList.toggle("open");
   button.setAttribute(
     "aria-expanded",
-    currentFilter.classList.contains("open")
+    currentFilter.classList.contains("open"),
   );
 });
 
